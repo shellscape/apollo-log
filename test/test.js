@@ -6,7 +6,7 @@ const { gql } = require('apollo-server');
 const test = require('ava');
 const sinon = require('sinon');
 
-const { LogExtension } = require('../lib/index');
+const { ApolloLogExtension } = require('../lib/index');
 
 const { run } = require('./helpers/setup');
 
@@ -42,7 +42,7 @@ test.after(() => {
 });
 
 test('defaults', (t) => {
-  const log = new LogExtension();
+  const log = new ApolloLogExtension();
   t.snapshot(log.options);
 });
 
@@ -65,7 +65,6 @@ test.serial('level', async (t) => {
   t.snapshot(result);
   t.snapshot(console.log.callCount);
   t.snapshot(console.info.callCount);
-  console.log('console.debug.callCount', console.log.callCount);
   await server.stop();
 });
 
