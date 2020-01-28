@@ -34,7 +34,7 @@
     "loglevelnext": "^3.0.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.0.0",
+    "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.0.0",
     "apollo-boost": "^0.3.1",
     "apollo-server": "^2.6.1",
