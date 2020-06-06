@@ -4,8 +4,8 @@ declare module "apollo-log" {
   export interface LoggerOptions {
     level?: LogLevel;
     mutate?: (level: LogLevel, data: Record<string, string> | string) => void;
-    prefix: string;
-    timestamp: boolean;
+    prefix?: string;
+    timestamp?: boolean;
   }
 
   export class ApolloLogExtension {
