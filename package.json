@@ -1,54 +1,65 @@
 {
   "name": "apollo-log",
   "version": "0.2.0",
-  "description": "A logging extension for Apollo GraphQL Server",
+  "description": "A logging plugin for Apollo GraphQL Server",
   "license": "MPL-2.0",
   "repository": "shellscape/apollo-log",
-  "author": "shellscape",
+  "author": "Andrew Powell <andrew@shellscape.org>",
   "homepage": "https://github.com/shellscape/apollo-log",
   "bugs": "https://github.com/shellscape/apollo-log/issues",
   "main": "lib/index.js",
   "engines": {
-    "node": ">= 10.0.0"
+    "node": ">= 10.23.1"
   },
   "scripts": {
-    "ci:coverage": "nyc npm run test && nyc report --reporter=text-lcov > coverage.lcov",
+    "build": "tsc --project tsconfig.json",
+    "ci:coverage": "nyc npm run ci:test && nyc report --reporter=text-lcov > coverage.lcov",
     "ci:lint": "npm run lint && npm run security",
-    "ci:lint:commits": "commitlint --from=${CIRCLE_BRANCH} --to=${CIRCLE_SHA1}",
     "ci:test": "npm run test -- --verbose",
-    "commitlint": "commitlint",
-    "commitmsg": "commitlint -e $GIT_PARAMS",
-    "lint": "eslint --fix --cache lib test",
+    "lint": "npm run lint:docs && npm run lint:json && npm run lint:package && npm run lint:js",
     "lint-staged": "lint-staged",
-    "security": "npm audit",
-    "test": "ava"
+    "lint:docs": "prettier --single-quote --arrow-parens avoid --trailing-comma none --write README.md",
+    "lint:js": "eslint --fix --cache lib test",
+    "lint:json": "prettier --write codecov.yml .circleci/config.yml .eslintrc",
+    "lint:package": "prettier --write package.json --plugin=prettier-plugin-package",
+    "security": "npm audit --audit-level=moderate",
+    "test": "ava",
+    "pretest": "npm run build"
   },
   "files": [
-    "lib/",
+    "dist/",
     "README.md",
-    "LICENSE",
-    "index.d.ts"
+    "LICENSE"
   ],
   "dependencies": {
-    "chalk": "^2.4.2",
-    "graphql": "^14.3.1",
-    "loglevelnext": "^3.0.1"
+    "apollo-server-plugin-base": "^0.10.4",
+    "chalk": "^4.1.0",
+    "fast-safe-stringify": "^2.0.7",
+    "loglevelnext": "^4.0.1",
+    "nanoid": "^3.1.20"
   },
   "devDependencies": {
-    "@commitlint/cli": "^8.3.5",
-    "@commitlint/config-conventional": "^8.0.0",
-    "apollo-boost": "^0.3.1",
-    "apollo-server": "^2.6.1",
-    "ava": "^2.0.0",
-    "eslint": "^5.6.1",
-    "eslint-config-shellscape": "^2.0.2",
-    "isomorphic-unfetch": "^3.0.0",
-    "lint-staged": "^8.1.0",
-    "nyc": "^14.1.1",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@types/sinon": "^9.0.10",
+    "@typescript-eslint/eslint-plugin": "^4.14.0",
+    "@typescript-eslint/parser": "^4.14.0",
+    "apollo-boost": "^0.4.9",
+    "apollo-server": "^2.19.2",
+    "ava": "^3.15.0",
+    "eslint": "^7.18.0",
+    "eslint-config-shellscape": "^3.0.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "isomorphic-unfetch": "^3.1.0",
+    "lint-staged": "^10.5.3",
+    "nyc": "^15.1.0",
     "pre-commit": "^1.2.2",
-    "prettier": "^1.14.3",
-    "sinon": "^7.3.2",
-    "standard-version": "^6.0.1"
+    "prettier": "^2.2.1",
+    "prettier-plugin-package": "^1.3.0",
+    "sinon": "^9.2.4",
+    "ts-node": "^9.1.1",
+    "tslib": "^2.1.0",
+    "typescript": "^4.1.3"
   },
   "keywords": [
     "apollo",
@@ -59,25 +70,34 @@
     "server"
   ],
   "ava": {
-    "helpers": [
-      "**/helpers/**/*"
+    "extensions": [
+      "ts"
+    ],
+    "files": [
+      "!**/fixtures/**",
+      "!**/helpers/**"
+    ],
+    "require": [
+      "ts-node/register"
     ]
   },
-  "pre-commit": "lint-staged",
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
+  },
   "lint-staged": {
     "*.js": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "nyc": {
     "include": [
-      "lib/*.js"
+      "src/*.ts"
     ],
     "exclude": [
-      "lib/client*.js",
       "test/"
     ]
   },
-  "types": "index.d.ts"
+  "pre-commit": "lint-staged"
 }

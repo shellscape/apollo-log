@@ -5,3 +5,4 @@ node_modules
 .eslintcache
 .nyc_output
 coverage.lcov
+dist

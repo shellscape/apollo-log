@@ -5,3 +5,4 @@ output.js
 *-wps-hmr.*
 *.hot-update.js
 test/**/output
+.eslintrc.js
