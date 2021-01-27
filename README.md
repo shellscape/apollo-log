@@ -19,7 +19,7 @@ A logging plugin for Apollo GraphQL Server
 
 :heart: Please consider [Sponsoring my work](https://github.com/sponsors/shellscape)
 
-`apollo-server` doesn't ship with any comprehensive logging, and instead offloads that responsiblity to the users and the resolvers or context handler. That can be inconvenient. This module provides uniform logging for the entire GraphQL request lifecycle, as provided by plugin hooks in `apollo-server`. The console/terminal result of which will resemble the image below:
+`apollo-server` doesn't ship with any comprehensive logging, and instead offloads that responsiblity to the users and the resolvers or context handler This module provides uniform logging for the entire GraphQL request lifecycle, as provided by plugin hooks in `apollo-server`. The console/terminal result of which will resemble the image below:
 
 <img src="https://github.com/shellscape/apollo-log/raw/master/.github/screen.png" width="508">
 
