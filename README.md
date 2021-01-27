@@ -1,9 +1,7 @@
-[tests]: 	https://img.shields.io/circleci/project/github/shellscape/apollo-log.svg
+[tests]: https://img.shields.io/circleci/project/github/shellscape/apollo-log.svg
 [tests-url]: https://circleci.com/gh/shellscape/apollo-log
-
 [cover]: https://codecov.io/gh/shellscape/apollo-log/branch/master/graph/badge.svg
 [cover-url]: https://codecov.io/gh/shellscape/apollo-log
-
 [size]: https://packagephobia.now.sh/badge?p=apollo-log
 [size-url]: https://packagephobia.now.sh/result?p=apollo-log
 
@@ -60,17 +58,19 @@ Please see the [Apollo Plugins](https://www.apollographql.com/docs/apollo-server
 ## Options
 
 ### `events`
+
 Type: `Record<string, boolean>`<br>
 Default: ```js
 {
-  didEncounterErrors: true,
-  didResolveOperation: false,
-  executionDidStart: false,
-  parsingDidStart: false,
-  responseForOperation: false,
-  validationDidStart: false,
-  willSendResponse: true
+didEncounterErrors: true,
+didResolveOperation: false,
+executionDidStart: false,
+parsingDidStart: false,
+responseForOperation: false,
+validationDidStart: false,
+willSendResponse: true
 }
+
 ```
 
 Specifies which [Apollo lifecycle events](https://www.apollographql.com/docs/apollo-server/integrations/plugins/#apollo-server-event-reference) will be logged. The `requestDidStart` event is always logged, and by default `didEncounterErrors` and `willSendResponse` are logged.
@@ -97,3 +97,4 @@ If `true`, will prepend a timestamp in the `HH:mm:ss` format to each log message
 [CONTRIBUTING](./.github/CONTRIBUTING.md)
 
 [LICENSE (Mozilla Public License)](./LICENSE)
+```

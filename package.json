@@ -13,23 +13,36 @@
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "ci:coverage": "nyc npm run ci:test && nyc report --reporter=text-lcov > coverage.lcov",
-    "ci:lint": "npm run lint && npm run security",
-    "ci:test": "npm run test -- --verbose",
-    "lint": "npm run lint:docs && npm run lint:json && npm run lint:package && npm run lint:js",
+    "ci:coverage": "nyc pnpm ci:test && nyc report --reporter=text-lcov > coverage.lcov",
+    "ci:lint": "pnpmlint && pnpm security",
+    "ci:test": "pnpm test -- --verbose",
+    "lint": "pnpm lint:docs && pnpm lint:json && pnpm lint:package && pnpm lint:js",
     "lint-staged": "lint-staged",
     "lint:docs": "prettier --single-quote --arrow-parens avoid --trailing-comma none --write README.md",
-    "lint:js": "eslint --fix --cache lib test",
-    "lint:json": "prettier --write codecov.yml .circleci/config.yml .eslintrc",
+    "lint:js": "eslint --fix --cache src test",
+    "lint:json": "prettier --write codecov.yml .circleci/config.yml .eslintrc.js",
     "lint:package": "prettier --write package.json --plugin=prettier-plugin-package",
-    "security": "npm audit --audit-level=moderate",
-    "test": "ava",
-    "pretest": "npm run build"
+    "prepublishOnly": "pnpm lint && pnpm build",
+    "pretest": "pnpm build",
+    "security": "pnpm audit --audit-level=moderate",
+    "test": "ava"
   },
   "files": [
     "dist/",
     "README.md",
     "LICENSE"
+  ],
+  "keywords": [
+    "apollo",
+    "apollo extension",
+    "apollo plugin",
+    "apollo-server",
+    "extension",
+    "graphql",
+    "log",
+    "logger",
+    "plugin",
+    "server"
   ],
   "dependencies": {
     "apollo-server-plugin-base": "^0.10.4",
@@ -61,18 +74,6 @@
     "tslib": "^2.1.0",
     "typescript": "^4.1.3"
   },
-  "keywords": [
-    "apollo",
-    "apollo extension",
-    "apollo plugin",
-    "apollo-server",
-    "extension",
-    "graphql",
-    "log",
-    "logger",
-    "plugin",
-    "server"
-  ],
   "ava": {
     "extensions": [
       "ts"
