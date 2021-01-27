@@ -63,10 +63,14 @@
   },
   "keywords": [
     "apollo",
+    "apollo extension",
+    "apollo plugin",
     "apollo-server",
+    "extension",
     "graphql",
     "log",
     "logger",
+    "plugin",
     "server"
   ],
   "ava": {

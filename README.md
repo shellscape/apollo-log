@@ -1,11 +1,11 @@
-[tests]: 	https://img.shields.io/circleci/project/github/shellscape/webpack-plugin-serve.svg
-[tests-url]: https://circleci.com/gh/shellscape/webpack-plugin-serve
+[tests]: 	https://img.shields.io/circleci/project/github/shellscape/apollo-log.svg
+[tests-url]: https://circleci.com/gh/shellscape/apollo-log
 
-[cover]: https://codecov.io/gh/shellscape/webpack-plugin-serve/branch/master/graph/badge.svg
-[cover-url]: https://codecov.io/gh/shellscape/webpack-plugin-serve
+[cover]: https://codecov.io/gh/shellscape/apollo-log/branch/master/graph/badge.svg
+[cover-url]: https://codecov.io/gh/shellscape/apollo-log
 
-[size]: https://packagephobia.now.sh/badge?p=webpack-plugin-serve
-[size-url]: https://packagephobia.now.sh/result?p=webpack-plugin-serve
+[size]: https://packagephobia.now.sh/badge?p=apollo-log
+[size-url]: https://packagephobia.now.sh/result?p=apollo-log
 
 <div align="center">
 	<img src='https://user-images.githubusercontent.com/841294/53402609-b97a2180-39ba-11e9-8100-812bab86357c.png' height='100' alt='Apollo Server'><br/><br/>
@@ -17,15 +17,11 @@
 
 # apollo-log
 
-A logging extension for the Apollo GraphQL Server
+A logging plugin for Apollo GraphQL Server
 
-<a href="https://www.patreon.com/shellscape">
-  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
-</a>
+:heart: Please consider [Sponsoring my work](https://github.com/sponsors/shellscape)
 
-_Please consider donating if you find this project useful._
-
-`apollo-server` doesn't ship with any comprehensive logging, and instead offloads that responsiblity to the users and the resolvers or context handler. That can be inconvenient. This module provides uniform logging for the entire GraphQL request lifecycle, as provided by extension hooks in `apollo-server`. The console/terminal result of which will resemble the image below:
+`apollo-server` doesn't ship with any comprehensive logging, and instead offloads that responsiblity to the users and the resolvers or context handler. That can be inconvenient. This module provides uniform logging for the entire GraphQL request lifecycle, as provided by plugin hooks in `apollo-server`. The console/terminal result of which will resemble the image below:
 
 <img src="https://github.com/shellscape/apollo-log/raw/master/.github/screen.png" width="508">
 
@@ -33,7 +29,7 @@ _Please consider donating if you find this project useful._
 
 `apollo-log` is an [evergreen 🌲](./.github/FAQ.md#what-does-evergreen-mean) module.
 
-This module requires an [Active LTS](https://github.com/nodejs/Release) Node version (v10.0.0+).
+This module requires an [Active LTS](https://github.com/nodejs/Release) Node version (v10.23.1+).
 
 ## Install
 
@@ -45,37 +41,49 @@ npm install apollo-log
 
 ## Usage
 
-Setting up `apollo-log` is straight-forward. Instantiate the extension, passing any desired options, and pass the extensions array to `apollo-server`.
+Setting up `apollo-log` is straight-forward. Import and call the plugin function, passing any desired options, and pass the plugin in an array to `apollo-server`.
 
 ```js
-const { ApolloLogExtension } = require('apollo-log');
-const { ApolloServer } = require('apollo-server');
+import { ApolloLogPlugin } from 'apollo-log';
+import { ApolloServer } from 'apollo-server';
 
 const options = { ... };
-const extensions = [() => new ApolloLogExtension(options)];
+const plugins = [ApolloLogPlugin(options)];
 const apollo = new ApolloServer({
-  extensions,
+  plugins,
   ...
 });
 ```
 
+Please see the [Apollo Plugins](https://www.apollographql.com/docs/apollo-server/integrations/plugins/#installing-a-plugin) documentation for more information.
+
 ## Options
 
-### `level`
-Type: `String`<br>
-Default: `info`
+### `events`
+Type: `Record<string, boolean>`<br>
+Default: ```js
+{
+  didEncounterErrors: true,
+  didResolveOperation: false,
+  executionDidStart: false,
+  parsingDidStart: false,
+  responseForOperation: false,
+  validationDidStart: false,
+  willSendResponse: true
+}
+```
 
-Specifies at which base level that log messages will be shown (typically `info` or `debug`). For more information please see the [`loglevelnext` documentation](https://github.com/shellscape/loglevelnext/blob/master/docs/LogLevel.md#level).
+Specifies which [Apollo lifecycle events](https://www.apollographql.com/docs/apollo-server/integrations/plugins/#apollo-server-event-reference) will be logged. The `requestDidStart` event is always logged, and by default `didEncounterErrors` and `willSendResponse` are logged.
 
 ### `mutate`
 Type: `Function`
-Default: `(level, data) => {}`
+Default: `(data: Record<string, string>) => Record<string, string>`
 
-If specified, allows inspecting and mutating the data logged to the console for each message. The `level` parameter is one of `info` or `debug`.
+If specified, allows inspecting and mutating the data logged to the console for each message.
 
 #### `prefix`
 Type: `String`<br>
-Default: `apollo: `
+Default: `apollo`
 
 Specifies a prefix, colored by level, prepended to each log message.
 
