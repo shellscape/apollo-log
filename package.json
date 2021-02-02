@@ -7,7 +7,7 @@
   "author": "Andrew Powell <andrew@shellscape.org>",
   "homepage": "https://github.com/shellscape/apollo-log",
   "bugs": "https://github.com/shellscape/apollo-log/issues",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">= 10.23.1"
   },
