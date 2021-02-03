@@ -1,6 +1,6 @@
 {
   "name": "apollo-log",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A logging plugin for Apollo GraphQL Server",
   "license": "MPL-2.0",
   "repository": "shellscape/apollo-log",
