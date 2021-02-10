@@ -60,15 +60,16 @@ Please see the [Apollo Plugins](https://www.apollographql.com/docs/apollo-server
 ### `events`
 
 Type: `Record<string, boolean>`<br>
-Default: ```js
+Default: 
+```js
 {
-didEncounterErrors: true,
-didResolveOperation: false,
-executionDidStart: false,
-parsingDidStart: false,
-responseForOperation: false,
-validationDidStart: false,
-willSendResponse: true
+  didEncounterErrors: true,
+  didResolveOperation: false,
+  executionDidStart: false,
+  parsingDidStart: false,
+  responseForOperation: false,
+  validationDidStart: false,
+  willSendResponse: true
 }
 
 ```
