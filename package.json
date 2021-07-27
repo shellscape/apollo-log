@@ -24,7 +24,7 @@
     "lint:package": "prettier --write package.json --plugin=prettier-plugin-package",
     "prepublishOnly": "pnpm lint && pnpm build",
     "pretest": "pnpm build",
-    "security": "pnpm audit --audit-level=moderate",
+    "security": "pnpm audit --audit-level=high --prod",
     "test": "ava"
   },
   "files": [
