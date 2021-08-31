@@ -18,7 +18,7 @@ export type LogMutateData = Record<string, string>;
 
 export interface LogOptions {
   events: { [name: string]: boolean };
-  mutate: (data: LogMutateData, requestContext: GraphQLRequestContext) => LogMutateData;
+  mutate: (data: LogMutateData) => LogMutateData;
   prefix: string;
   timestamp: boolean;
 }
@@ -51,7 +51,10 @@ const getLog = (options: LogOptions) => {
   const log = loglevel.create({ level: 'info', name: 'apollo-log', prefix });
 
   return (id: string, data: unknown, requestContext: GraphQLRequestContext) => {
-    const mutated = options.mutate?.(data as LogMutateData, requestContext);
+    const mutated = options.mutate?.({
+      ...(data as any),
+      requestContext,
+    });
     log[(data as any).errors ? 'error' : 'info'](chalk`{dim ${id}}`, stringify(mutated));
   };
 };
