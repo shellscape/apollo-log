@@ -14,7 +14,7 @@ import stringify from 'fast-safe-stringify';
 import loglevel from 'loglevelnext';
 import { customAlphabet } from 'nanoid';
 
-export type LogMutateData = Record<string, string>;
+export type LogMutateData = Record<string, string> & { context: GraphQLRequestContext };
 
 export interface LogOptions {
   events: { [name: string]: boolean };
@@ -50,11 +50,8 @@ const getLog = (options: LogOptions) => {
   };
   const log = loglevel.create({ level: 'info', name: 'apollo-log', prefix });
 
-  return (id: string, data: unknown, requestContext: GraphQLRequestContext) => {
-    const mutated = options.mutate?.({
-      ...(data as any),
-      requestContext,
-    });
+  return (id: string, data: unknown) => {
+    const mutated = options.mutate?.(data as LogMutateData);
     log[(data as any).errors ? 'error' : 'info'](chalk`{dim ${id}}`, stringify(mutated));
   };
 };
@@ -75,41 +72,42 @@ export const ApolloLogPlugin = (opts?: Partial<LogOptions>): ApolloServerPlugin 
           event: 'request',
           operationName: context.operationName,
           query,
-          variables
-        }, context);
+          variables,
+          context
+        });
       }
 
       const { events } = options;
       const handlers: GraphQLRequestListener = {
         didEncounterErrors({ errors }) {
-          events.didEncounterErrors && log(operationId, { event: 'errors', errors }, context);
+          events.didEncounterErrors && log(operationId, { event: 'errors', errors, context });
         },
 
         didResolveOperation({ metrics, operationName }) {
           events.didResolveOperation &&
-            log(operationId, { event: 'didResolveOperation', metrics, operationName }, context);
+            log(operationId, { event: 'didResolveOperation', metrics, operationName, context });
         },
 
         executionDidStart({ metrics }) {
-          events.executionDidStart && log(operationId, { event: 'executionDidStart', metrics }, context);
+          events.executionDidStart && log(operationId, { event: 'executionDidStart', metrics, context });
         },
 
         parsingDidStart({ metrics }) {
-          events.parsingDidStart && log(operationId, { event: 'parsingDidStart', metrics }, context);
+          events.parsingDidStart && log(operationId, { event: 'parsingDidStart', metrics, context });
         },
 
         responseForOperation({ metrics, operationName }) {
           events.responseForOperation &&
-            log(operationId, { event: 'responseForOperation', metrics, operationName }, context);
+            log(operationId, { event: 'responseForOperation', metrics, operationName, context });
           return null;
         },
 
         validationDidStart({ metrics }) {
-          events.validationDidStart && log(operationId, { event: '', metrics }, context);
+          events.validationDidStart && log(operationId, { event: '', metrics, context });
         },
 
         willSendResponse({ metrics }) {
-          options.events.willSendResponse && log(operationId, { event: 'response', metrics }, context);
+          options.events.willSendResponse && log(operationId, { event: 'response', metrics, context });
         }
       };
 
