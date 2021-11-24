@@ -61,7 +61,7 @@ export const ApolloLogPlugin = (opts?: Partial<LogOptions>): ApolloServerPlugin 
   const log = getLog(options);
 
   return {
-    requestDidStart(context) {
+    async requestDidStart(context) {
       const operationId = nanoid();
       const ignore = ignoredOps.includes(context.operationName || '');
 
@@ -79,35 +79,35 @@ export const ApolloLogPlugin = (opts?: Partial<LogOptions>): ApolloServerPlugin 
 
       const { events } = options;
       const handlers: GraphQLRequestListener = {
-        didEncounterErrors({ errors }) {
+        async didEncounterErrors({ errors }) {
           events.didEncounterErrors && log(operationId, { event: 'errors', errors, context });
         },
 
-        didResolveOperation({ metrics, operationName }) {
+        async didResolveOperation({ metrics, operationName }) {
           events.didResolveOperation &&
             log(operationId, { event: 'didResolveOperation', metrics, operationName, context });
         },
 
-        executionDidStart({ metrics }) {
+        async executionDidStart({ metrics }) {
           events.executionDidStart && log(operationId, { event: 'executionDidStart', metrics, context });
         },
 
-        parsingDidStart({ metrics }) {
+        async parsingDidStart({ metrics }) {
           events.parsingDidStart && log(operationId, { event: 'parsingDidStart', metrics, context });
         },
 
-        responseForOperation({ metrics, operationName }) {
-          events.responseForOperation &&
-            log(operationId, { event: 'responseForOperation', metrics, operationName, context });
+        async responseForOperation({ metrics, operationName }) {
+          events.responseForOperation && log(operationId, { event: 'responseForOperation', metrics, operationName, context });
           return null;
         },
 
-        validationDidStart({ metrics }) {
+        async validationDidStart({ metrics }) {
           events.validationDidStart && log(operationId, { event: '', metrics, context });
         },
 
-        willSendResponse({ metrics }) {
-          options.events.willSendResponse && log(operationId, { event: 'response', metrics, context });
+        async willSendResponse({ metrics }) {
+          options.events.willSendResponse &&
+            log(operationId, { event: 'response', metrics, context });
         }
       };
 

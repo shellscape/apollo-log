@@ -1,7 +1,7 @@
 /* eslint-disable import/first */
 require('isomorphic-unfetch');
 
-import ApolloClient from 'apollo-boost';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
 import { gql } from 'apollo-server';
 import test from 'ava';
 import * as sinon from 'sinon';
@@ -46,7 +46,10 @@ test.serial.after(() => {
 
 test.serial('logging', async (t) => {
   const server = await run({});
-  const client = new ApolloClient({ uri });
+  const client = new ApolloClient({
+    link: new HttpLink({ uri }),
+    cache: new InMemoryCache()
+  });
   const result = await client.query({ query });
   t.snapshot(result);
   t.snapshot(spies.info?.callCount);
@@ -73,7 +76,10 @@ test.serial('events', async (t) => {
       willSendResponse: false
     }
   });
-  const client = new ApolloClient({ uri });
+  const client = new ApolloClient({
+    link: new HttpLink({ uri }),
+    cache: new InMemoryCache()
+  });
   const result = await client.query({ query });
   t.snapshot(result);
   t.is(spies.info?.callCount, 2);
@@ -91,7 +97,10 @@ test.serial('mutate', async (t) => {
   const server = await run({
     mutate: (data: LogMutateData) => Object.assign(data, { batman: 'joker' })
   });
-  const client = new ApolloClient({ uri });
+  const client = new ApolloClient({
+    link: new HttpLink({ uri }),
+    cache: new InMemoryCache()
+  });
   const result = await client.query({ query });
   t.snapshot(result);
   t.is(spies.info?.callCount, 2);
@@ -107,7 +116,10 @@ test.serial('mutate', async (t) => {
 
 test.serial('errors', async (t) => {
   const server = await run({});
-  const client = new ApolloClient({ uri });
+  const client = new ApolloClient({
+    link: new HttpLink({ uri }),
+    cache: new InMemoryCache()
+  });
   try {
     await client.query({
       query: gql`
